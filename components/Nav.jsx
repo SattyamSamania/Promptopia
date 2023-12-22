@@ -1,9 +1,10 @@
-"use client";
+'use client'
 
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { motion } from "framer-motion";
 
 const Nav = () => {
   const { data: session } = useSession();
@@ -12,17 +13,21 @@ const Nav = () => {
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
   useEffect(() => {
-    (async () => {
+    const fetchData = async () => {
       const res = await getProviders();
-      console.log(res);
       setProviders(res);
-    })();
+    };
+
+    fetchData();
   }, []);
 
-//   console.log(providers);
-
   return (
-    <nav className='flex-between w-full mb-16 pt-3'>
+    <motion.nav
+      className='flex-between w-full mb-16 pt-3'
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <Link href='/' className='flex gap-2 flex-center'>
         <Image
           src='/assets/images/logo.svg'
@@ -35,7 +40,12 @@ const Nav = () => {
       </Link>
 
       {/* Desktop Navigation */}
-      <div className='sm:flex hidden'>
+      <motion.div
+        className='sm:flex hidden'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         {session?.user ? (
           <div className='flex gap-3 md:gap-5'>
             <Link href='/create-prompt' className='black_btn'>
@@ -73,10 +83,15 @@ const Nav = () => {
               ))}
           </>
         )}
-      </div>
+      </motion.div>
 
       {/* Mobile Navigation */}
-      <div className='sm:hidden flex relative'>
+      <motion.div
+        className='sm:hidden flex relative'
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         {session?.user ? (
           <div className='flex'>
             <Image
@@ -134,8 +149,8 @@ const Nav = () => {
               ))}
           </>
         )}
-      </div>
-    </nav>
+      </motion.div>
+    </motion.nav>
   );
 };
 
